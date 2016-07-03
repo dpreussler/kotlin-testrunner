@@ -44,6 +44,6 @@ Gradle
 maven { url 'https://oss.sonatype.org/content/repositories/staging/'}
 ...
 
-compile 'de.jodamob.kotlin:kotlin-testrunner:0.1'
+compile 'de.jodamob.kotlin:kotlin-testrunner:0.2'
  
 ```
