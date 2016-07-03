@@ -11,6 +11,10 @@ This makes mocking impossible. This leaves you with the possibilies of
 
 This library removes final modifiers of classes and methods during the test in runtime.
 
+
+This can not be combined with Robolectric for now but feel free to build a RobolectricTestrunner version based on this
+
+
 Usage
 =====
 for Java:
