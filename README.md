@@ -20,9 +20,9 @@ public class MyJavaTestclass {
 ```
 for Kotlin:
 --------
-```java
+```kotlin
 @RunWith(KotlinTestRunner::class)
-class MyJavaTestclass {
+class MyKotlinTestclass {
    @Test 
    fun test() {
    ...
