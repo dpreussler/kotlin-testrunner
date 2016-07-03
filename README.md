@@ -1,7 +1,7 @@
 # kotlin-testrunner
 
 classes and methods are final by default in kotlin.
-This makes mocking impossible. This leaves you with the possibilies of either open everything you need in tests or use Powermock and prepare all your kotlin classes for the test with annoations.
+This makes mocking impossible. This leaves you with the possibilies of either open everything you need in tests or introduce interfaces for every kotlin class you want to mock or use Powermock and prepare all your kotlin classes for the test with annoations.
 
 This library removes final modifiers of classes and methods during the test in runtime.
 
