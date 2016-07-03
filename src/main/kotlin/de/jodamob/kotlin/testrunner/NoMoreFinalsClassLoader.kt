@@ -6,7 +6,7 @@ import javassist.LoaderClassPath
 import javassist.Modifier
 import java.lang.reflect.Modifier as ReflectModifier
 
-class MyClassLoader : ClassLoader {
+class NoMoreFinalsClassLoader : ClassLoader {
 
     val filter = arrayListOf("java.","javax.", "com.google.", "android.", "org.junit.", "org.mockito", "junit.", "kotlin.")
     val pool = ClassPool(false)
@@ -23,13 +23,13 @@ class MyClassLoader : ClassLoader {
 
     @Suppress("UNCHECKED_CAST")
     @Throws(Exception::class)
-    fun <T> process(className: String, classLoader: MyClassLoader): Class<T> {
+    fun <T> process(className: String, classLoader: NoMoreFinalsClassLoader): Class<T> {
         println("Processing class: " + className)
         val defaultClass = pool.get(className)
         if (isPublicOrFinalOrIrrelvant(className, defaultClass)) {
             return defaultClass.toClass(classLoader) as Class<T>
         }
-        return removeFinal(defaultClass, classLoader) as Class<T>;
+        return removeFinal(defaultClass, classLoader) as Class<T>
     }
 
     private fun isPublicOrFinalOrIrrelvant(className: String, defaultClass: CtClass): Boolean {
@@ -39,7 +39,7 @@ class MyClassLoader : ClassLoader {
                 !ReflectModifier.isFinal(defaultClass.modifiers)
     }
 
-    fun removeFinal(clazz: CtClass, classLoader: MyClassLoader): Class<*>? {
+    fun removeFinal(clazz: CtClass, classLoader: NoMoreFinalsClassLoader): Class<*>? {
         removeFinalOnClass(clazz)
         removeFinalOnMethods(clazz)
         clazz.stopPruning(true)
