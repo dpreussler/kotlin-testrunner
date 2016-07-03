@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/dpreussler/kotlin-testrunner.svg?branch=master?branch=master)](https://travis-ci.org/dpreussler/kotlin-testrunner)
+
+
 # kotlin-testrunner
 
 Classes and methods are final by default in kotlin.
