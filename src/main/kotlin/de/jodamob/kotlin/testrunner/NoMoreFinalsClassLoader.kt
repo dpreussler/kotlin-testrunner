@@ -4,35 +4,37 @@ import javassist.ClassPool
 import javassist.CtClass
 import javassist.LoaderClassPath
 import javassist.Modifier
+import kotlin.reflect.KClass
 import java.lang.reflect.Modifier as ReflectModifier
 
-class NoMoreFinalsClassLoader(vararg openedClasses: String) : ClassLoader() {
+internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootClass: Class<*>) : ClassLoader() {
 
     private val pool = ClassPool(false)
-    private val openedClasses by lazy { openedClasses.toList() }
+    private val processedPackages: List<String>
 
     init {
         pool.appendClassPath(LoaderClassPath(this))
         pool.appendSystemPath()
+        processedPackages = (classFilter.packages + classFilter.classes.map { it.packageName }).distinct()
     }
 
     @Throws(ClassNotFoundException::class)
-    override fun loadClass(name: String): Class<*> {
-        return if (name.startsWithAny(openedClasses)) {
-            process<Class<*>>(name, this)
+    override fun loadClass(className: String): Class<*> {
+        return if (isRootClass(className) || className.isInProcessedPackage(processedPackages)) {
+            process<Class<*>>(className)
         } else {
-            super.loadClass(name)
+            super.loadClass(className)
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     @Throws(Exception::class)
-    fun <T> process(className: String, classLoader: NoMoreFinalsClassLoader): Class<T> {
+    fun <T> process(className: String): Class<T> {
         val defaultClass = pool.get(className)
-        return if (isPublicOrFinalOrIrrelevant(className, defaultClass)) {
-            defaultClass.toClass(classLoader) as Class<T>
+        return if (isIncluded(className) && !isPublicOrFinalOrIrrelevant(className, defaultClass)) {
+            removeFinal(defaultClass) as Class<T>
         } else {
-            removeFinal(defaultClass, classLoader) as Class<T>
+            defaultClass.toClass(this) as Class<T>
         }
     }
 
@@ -43,11 +45,11 @@ class NoMoreFinalsClassLoader(vararg openedClasses: String) : ClassLoader() {
                 !ReflectModifier.isFinal(defaultClass.modifiers)
     }
 
-    fun removeFinal(clazz: CtClass, classLoader: NoMoreFinalsClassLoader): Class<*>? {
+    fun removeFinal(clazz: CtClass): Class<*>? {
         removeFinalOnClass(clazz)
         removeFinalOnMethods(clazz)
         clazz.stopPruning(true)
-        return clazz.toClass(classLoader)
+        return clazz.toClass(this)
     }
 
     private fun removeFinalOnMethods(clazz: CtClass) {
@@ -65,11 +67,22 @@ class NoMoreFinalsClassLoader(vararg openedClasses: String) : ClassLoader() {
         }
     }
 
-    private fun String.startsWithAny(includes: List<String>): Boolean {
+    private fun String.isInProcessedPackage(includes: List<String>): Boolean {
         includes.forEach {
             if (this.startsWith(it, true)) return true
         }
 
         return false
     }
+
+    private fun isIncluded(className: String)
+            = className.isInProcessedPackage(classFilter.packages) || classFilter.classes.any { it.qualifiedName == className }
+
+    private fun isRootClass(className: String) = className == rootClass.canonicalName
+
+
+    private val KClass<*>.packageName: String
+        get() = qualifiedName!!.removeSuffix(".$simpleName")
 }
+
+internal data class ClassFilter(val packages: List<String>, val classes: List<KClass<*>>)

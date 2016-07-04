@@ -1,16 +1,18 @@
-package de.jodamob.kotlin.testrunner.sample
+package de.jodamob.kotlin.testrunner.sampl2
 
 import de.jodamob.kotlin.testrunner.KotlinTestRunner
 import de.jodamob.kotlin.testrunner.OpenedClasses
 import de.jodamob.kotlin.testrunner.nonopen.FinalNonOpenClassSample
+import de.jodamob.kotlin.testrunner.sample.ClassToBeTested
+import de.jodamob.kotlin.testrunner.sample.FinalClassSample
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.exceptions.base.MockitoException
 
 @RunWith(KotlinTestRunner::class)
-@OpenedClasses("de.jodamob.kotlin.testrunner.sample")
-class TestWithRunner {
+@OpenedClasses(FinalClassSample::class)
+class TestWithRunnerOnClasses {
 
     @Test(expected = IllegalAccessError::class)
     fun should_fail_without_mock() {
