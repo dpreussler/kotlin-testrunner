@@ -1,5 +1,7 @@
-package de.jodamob.kotlin.testrunner.sample
+package de.jodamob.kotlin.testrunner.tests
 
+import de.jodamob.kotlin.testrunner.sample.ClassToBeTested
+import de.jodamob.kotlin.testrunner.sample.FinalClassSample
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.exceptions.base.MockitoException
