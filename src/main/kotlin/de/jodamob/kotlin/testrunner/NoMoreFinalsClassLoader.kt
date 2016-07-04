@@ -6,33 +6,37 @@ import javassist.LoaderClassPath
 import javassist.Modifier
 import java.lang.reflect.Modifier as ReflectModifier
 
-class NoMoreFinalsClassLoader : ClassLoader {
+class NoMoreFinalsClassLoader(vararg openedClasses: String) : ClassLoader() {
 
-    val filter = arrayListOf("java.","javax.", "com.google.", "android.", "org.junit.", "org.mockito", "junit.", "kotlin.")
-    val pool = ClassPool(false)
-    constructor() {
+    private val pool = ClassPool(false)
+    private val openedClasses by lazy { openedClasses.toList() }
+
+    init {
         pool.appendClassPath(LoaderClassPath(this))
         pool.appendSystemPath()
     }
 
     @Throws(ClassNotFoundException::class)
     override fun loadClass(name: String): Class<*> {
-        filter.forEach { if (name.startsWith(it)) return super.loadClass(name) }
-        return process<Class<*>>(name, this)
+        return if (name.startsWithAny(openedClasses)) {
+            process<Class<*>>(name, this)
+        } else {
+            super.loadClass(name)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
     @Throws(Exception::class)
     fun <T> process(className: String, classLoader: NoMoreFinalsClassLoader): Class<T> {
-        println("Processing class: " + className)
         val defaultClass = pool.get(className)
-        if (isPublicOrFinalOrIrrelvant(className, defaultClass)) {
-            return defaultClass.toClass(classLoader) as Class<T>
+        return if (isPublicOrFinalOrIrrelevant(className, defaultClass)) {
+            defaultClass.toClass(classLoader) as Class<T>
+        } else {
+            removeFinal(defaultClass, classLoader) as Class<T>
         }
-        return removeFinal(defaultClass, classLoader) as Class<T>
     }
 
-    private fun isPublicOrFinalOrIrrelvant(className: String, defaultClass: CtClass): Boolean {
+    private fun isPublicOrFinalOrIrrelevant(className: String, defaultClass: CtClass): Boolean {
         return className.endsWith("Test") || className.endsWith("TestRunner") ||
                 ReflectModifier.isStatic(defaultClass.modifiers) ||
                 !ReflectModifier.isPublic(defaultClass.modifiers) ||
@@ -59,5 +63,13 @@ class NoMoreFinalsClassLoader : ClassLoader {
         if (ReflectModifier.isFinal(modifiers)) {
             clazz.modifiers = Modifier.clear(modifiers, java.lang.reflect.Modifier.FINAL)
         }
+    }
+
+    private fun String.startsWithAny(includes: List<String>): Boolean {
+        includes.forEach {
+            if (this.startsWith(it, true)) return true
+        }
+
+        return false
     }
 }

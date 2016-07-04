@@ -1,8 +1,8 @@
 package de.jodamob.kotlin.testrunner.sample
 
-class ClassToBeTested(val finalClassSample: FinalClassSample) {
+class ClassToBeTested(val classUnderTest: TestedClass) {
 
     fun callMe() {
-        finalClassSample.finalMethod()
+        classUnderTest.finalMethod()
     }
 }

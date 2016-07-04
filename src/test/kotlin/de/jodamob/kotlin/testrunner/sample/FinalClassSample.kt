@@ -1,8 +1,8 @@
 package de.jodamob.kotlin.testrunner.sample
 
-class FinalClassSample {
+class FinalClassSample : TestedClass {
 
-    fun finalMethod() {
+    override fun finalMethod() {
         throw IllegalAccessError("you should not see this")
     }
 }
