@@ -1,4 +1,4 @@
-package de.jodamob.kotlin.testrunner.sampl2
+package de.jodamob.kotlin.testrunner.tests
 
 import de.jodamob.kotlin.testrunner.KotlinTestRunner
 import de.jodamob.kotlin.testrunner.OpenedPackages
