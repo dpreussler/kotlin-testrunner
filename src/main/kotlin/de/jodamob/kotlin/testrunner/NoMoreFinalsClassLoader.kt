@@ -79,10 +79,6 @@ internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootCla
             = className.isInProcessedPackage(classFilter.packages) || classFilter.classes.any { it.qualifiedName == className }
 
     private fun isRootClass(className: String) = className == rootClass.canonicalName
-
-
-    private val KClass<*>.packageName: String
-        get() = qualifiedName!!.removeSuffix(".$simpleName")
 }
 
 internal data class ClassFilter(val packages: List<String>, val classes: List<KClass<*>>)
