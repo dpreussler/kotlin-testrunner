@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/dpreussler/kotlin-testrunner.svg?branch=master)](https://travis-ci.org/dpreussler/kotlin-testrunner)
-
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-testrunner/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-testrunner)
 
 # kotlin-testrunner
 
@@ -45,7 +45,7 @@ Gradle
 ======
 
 ```groovy
-maven { url 'https://oss.sonatype.org/content/repositories/staging/'}
+
 ...
 
 compile 'de.jodamob.kotlin:kotlin-testrunner:0.2'
