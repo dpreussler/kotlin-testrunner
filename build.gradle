@@ -44,7 +44,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'jboss:javassist:3.1'
+    compile 'org.javassist:javassist:3.20.0-GA'
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 	compile 'junit:junit:4.11'
 	testCompile 'org.mockito:mockito-all:1.9.5'
