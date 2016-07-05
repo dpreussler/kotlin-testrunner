@@ -5,13 +5,12 @@ import de.jodamob.kotlin.testrunner.OpenedClasses
 import de.jodamob.kotlin.testrunner.nonopen.FinalNonOpenClassSample
 import de.jodamob.kotlin.testrunner.sample.ClassToBeTested
 import de.jodamob.kotlin.testrunner.sample.FinalClassSample
-import de.jodamob.kotlin.testrunner.sample.FinalClassTwoSample
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(KotlinTestRunner::class)
-@OpenedClasses(FinalClassSample::class, FinalClassTwoSample::class)
-class TestWithRunnerOnClasses {
+@OpenedClasses(FinalClassSample::class)
+class TestWithRunnerOnClass {
 
     @Test(expected = IllegalAccessError::class)
     fun should_fail_without_mock() {
@@ -23,13 +22,6 @@ class TestWithRunnerOnClasses {
     @Test
     fun should_work() {
         val finalClassSample = org.mockito.Mockito.mock(FinalClassSample::class.java)
-        val classToBeTested = ClassToBeTested(finalClassSample)
-        classToBeTested.callMe()
-    }
-
-    @Test
-    fun should_work_tpp() {
-        val finalClassSample = org.mockito.Mockito.mock(FinalClassTwoSample::class.java)
         val classToBeTested = ClassToBeTested(finalClassSample)
         classToBeTested.callMe()
     }

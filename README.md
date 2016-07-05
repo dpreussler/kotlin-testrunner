@@ -40,6 +40,41 @@ class MyKotlinTestclass {
 }
 ```
 
+By default this will change all the classes in the same package as your test. We cant do this for all the classes as we don't know your environment and dependencies.
+You can configure this via annotations:
+
+```java
+@OpenedClasses("FinalClassSample::class")
+```
+
+or
+```java
+@OpenedClasses("FinalClassSample::class", "FinalClass2Sample::class")
+```
+
+or
+```java
+@OpenedPackages("com.mypackage")
+```
+
+
+Spock
+=====
+Thanks to [Paweł Urban](//github.com/uKL) we also support Spock.
+
+Simply use the SpotlinTestRunner:
+
+
+```kotlin
+@RunWith(SpotlinTestRunner::class)
+class MyKotlinTestclass {
+   @Test 
+   fun test() {
+   ...
+   }
+}
+```
+
 
 Gradle
 ======
@@ -47,8 +82,15 @@ Gradle
 ```groovy
 
 ...
-
-compile 'de.jodamob.kotlin:kotlin-testrunner:0.2'
+repositories {
+...
+	maven { url 'https://oss.sonatype.org/content/repositories/staging/'}
+}
+...
+dependencies {
+...
+	compile 'de.jodamob.kotlin:kotlin-testrunner:0.3.1'
+}
  
 ```
 
@@ -58,7 +100,7 @@ License
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Danny Preussler
+Copyright (c) 2016 Danny Preussler, Paweł Urban
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
