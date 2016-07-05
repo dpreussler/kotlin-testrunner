@@ -15,6 +15,25 @@ This library removes final modifiers of classes and methods during the test in r
 This can not be combined with Robolectric for now but feel free to build a RobolectricTestrunner version based on this
 
 
+Gradle
+------
+
+```groovy
+...
+repositories {
+...
+	maven { url 'https://oss.sonatype.org/content/repositories/staging/'}
+}
+...
+dependencies {
+...
+	compile 'de.jodamob.kotlin:kotlin-runner-junit4:0.3.1'
+}
+ 
+```
+
+
+
 Usage
 =====
 for Java:
@@ -57,6 +76,19 @@ or
 @OpenedPackages("com.mypackage")
 ```
 
+Full example:
+
+```kotlin
+@RunWith(KotlinTestRunner::class)
+@OpenedPackages("com.mypackage")
+class MyKotlinTestclass {
+   @Test 
+   fun test() {
+   ...
+   }
+}
+```
+
 
 Spock
 =====
@@ -75,24 +107,12 @@ class MyKotlinTestclass {
 }
 ```
 
-
-Gradle
-======
+and import the spock runner instead the junit4 one:
 
 ```groovy
-
-...
-repositories {
-...
-	maven { url 'https://oss.sonatype.org/content/repositories/staging/'}
-}
-...
-dependencies {
-...
-	compile 'de.jodamob.kotlin:kotlin-testrunner:0.3.1'
-}
- 
+	compile 'de.jodamob.kotlin:kotlin-runner-spock:0.3.1'
 ```
+
 
 
 License
