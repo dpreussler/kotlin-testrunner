@@ -1,0 +1,3 @@
+include ':kotlin-runner'
+include ':kotlin-runner-junit4'
+include ':kotlin-runner-spock'
