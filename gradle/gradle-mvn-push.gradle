@@ -1,0 +1,143 @@
+/*
+ * Copyright 2013 Chris Banes
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+
+/*
+ * Gets the version name from the latest Git tag
+ */
+def getVersionName = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (Exception e) {
+        return ""
+    }
+}
+
+def GROUP = 'de.jodamob.kotlin'
+
+version = getVersionName()
+group = GROUP
+
+afterEvaluate {
+    project ->
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                    pom.groupId = GROUP
+                    pom.artifactId = POM_ARTIFACT_ID
+                    pom.version = getVersionName()
+
+                    repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                        authentication(userName: sonatypeUsername, password: sonatypePassword)
+                    }
+
+                    pom.project {
+                        name 'kotlin-testrunner'
+                        packaging 'jar'
+                        description 'Junit testrunner that removes final from classes and methods'
+                        url 'https://github.com/dpreussler/kotlin-testrunner'
+
+                        scm {
+                            url 'scm:git@github.com:dpreussler/kotlin-testrunner.git'
+                            connection 'scm:git@github.com:dpreussler/kotlin-testrunner.git'
+                            developerConnection 'scm:git@github.com:dpreussler/kotlin-testrunner.git'
+                        }
+
+                        licenses {
+                            license {
+                                name 'The MIT License (MIT)'
+                                url 'https://github.com/dpreussler/kotlin-testrunner/blob/master/LICENSE'
+                                distribution 'repo'
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id 'dpreussler'
+                                name 'Danny Preussler'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        signing {
+            sign configurations.archives
+        }
+
+        install {
+            repositories.mavenInstaller {
+                pom.groupId = GROUP
+                pom.artifactId = POM_ARTIFACT_ID
+                pom.version = getVersionName()
+
+                pom.project {
+                    name 'kotlin-testrunner'
+                    packaging 'jar'
+                    description 'Junit testrunner that removes final from classes and methods'
+                    url 'https://github.com/dpreussler/kotlin-testrunner'
+
+                    scm {
+                        url 'scm:git@github.com:dpreussler/kotlin-testrunner.git'
+                        connection 'scm:git@github.com:dpreussler/kotlin-testrunner.git'
+                        developerConnection 'scm:git@github.com:dpreussler/kotlin-testrunner.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The MIT License (MIT)'
+                            url 'https://github.com/dpreussler/kotlin-testrunner/blob/master/LICENSE'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'dpreussler'
+                            name 'Danny Preussler'
+                        }
+                    }
+                }
+            }
+        }
+
+        task sourcesJar(type: Jar) {
+            from sourceSets.main.allSource
+            classifier = 'sources'
+        }
+
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            classifier = 'javadoc'
+            from javadoc.destinationDir
+        }
+
+        artifacts {
+            archives jar
+            archives javadocJar
+            archives sourcesJar
+        }
+}
