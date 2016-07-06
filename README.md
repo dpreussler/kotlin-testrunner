@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/dpreussler/kotlin-testrunner.svg?branch=master)](https://travis-ci.org/dpreussler/kotlin-testrunner)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-testrunner/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-testrunner)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-runner-junit4/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-runner-junit4)
 
 # kotlin-testrunner
 
@@ -19,11 +19,6 @@ Gradle
 ------
 
 ```groovy
-...
-repositories {
-...
-	maven { url 'https://oss.sonatype.org/content/repositories/staging/'}
-}
 ...
 dependencies {
 ...
