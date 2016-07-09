@@ -22,7 +22,7 @@ Gradle
 ...
 dependencies {
 ...
-	compile 'de.jodamob.kotlin:kotlin-runner-junit4:0.3.1'
+	testCompile 'de.jodamob.kotlin:kotlin-runner-junit4:0.3.1'
 }
  
 ```
