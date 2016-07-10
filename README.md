@@ -54,8 +54,9 @@ class MyKotlinTestclass {
 }
 ```
 
-By default this will change all the classes in the same package as your test. We cant do this for all the classes as we don't know your environment and dependencies.
-You can configure this via annotations:
+By default this will change all the classes in the same package as your test. 
+We cant do this for all the classes as we don't know your environment and dependencies.
+But you can configure this via annotations similar to Powermock:
 
 ```java
 @OpenedClasses("FinalClassSample::class")
@@ -66,7 +67,8 @@ or
 @OpenedClasses("FinalClassSample::class", "FinalClass2Sample::class")
 ```
 
-or
+or simply tell us the package, and we will mock all those (incl subpackages)
+
 ```java
 @OpenedPackages("com.mypackage")
 ```
