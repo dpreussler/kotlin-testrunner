@@ -12,7 +12,11 @@ This makes mocking impossible. This leaves you with the possibilies of
 This library removes final modifiers of classes and methods during the test in runtime.
 
 
-This can not be combined with Robolectric for now but feel free to build a RobolectricTestrunner version based on this
+Remarks
+------
+
+* Since Mockito 2.0 this can be achieved by mockito itself, and you don't need this runner
+* This can not be combined with Robolectric for now but feel free to build a RobolectricTestrunner version based on this
 
 
 Gradle
