@@ -31,18 +31,17 @@ internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootCla
     @Throws(Exception::class)
     fun <T> process(className: String): Class<T> {
         val defaultClass = pool.get(className)
-        return if (isIncluded(className) && !isPublicOrFinalOrIrrelevant(className, defaultClass)) {
+        return if (isIncluded(className) && !isStaticOrNotPublic(className, defaultClass)) {
             removeFinal(defaultClass) as Class<T>
         } else {
             defaultClass.toClass(this) as Class<T>
         }
     }
 
-    private fun isPublicOrFinalOrIrrelevant(className: String, defaultClass: CtClass): Boolean {
+    private fun isStaticOrNotPublic(className: String, defaultClass: CtClass): Boolean {
         return className.endsWith("Test") || className.endsWith("TestRunner") ||
                 ReflectModifier.isStatic(defaultClass.modifiers) ||
-                !ReflectModifier.isPublic(defaultClass.modifiers) ||
-                !ReflectModifier.isFinal(defaultClass.modifiers)
+                !ReflectModifier.isPublic(defaultClass.modifiers)
     }
 
     fun removeFinal(clazz: CtClass): Class<*>? {
