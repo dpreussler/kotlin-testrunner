@@ -75,7 +75,7 @@ internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootCla
     }
 
     private fun isIncluded(className: String)
-            = className.isInProcessedPackage(classFilter.packages) || classFilter.classes.any { it.qualifiedName == className }
+            = className.isInProcessedPackage(classFilter.packages) || classFilter.classes.any { it.jvmName == className }
 
     private fun isRootClass(className: String) = className == rootClass.canonicalName
 }
