@@ -30,11 +30,15 @@ internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootCla
     @Suppress("UNCHECKED_CAST")
     @Throws(Exception::class)
     fun <T> process(className: String): Class<T> {
-        val defaultClass = pool.get(className)
-        return if (isIncluded(className) && !isStaticOrNotPublic(className, defaultClass)) {
-            removeFinal(defaultClass) as Class<T>
-        } else {
-            defaultClass.toClass(this) as Class<T>
+        try {
+            val defaultClass = pool.get(className)
+            return if (isIncluded(className) && !isStaticOrNotPublic(className, defaultClass)) {
+                removeFinal(defaultClass) as Class<T>
+            } else {
+                defaultClass.toClass(this) as Class<T>
+            }
+        } catch (notFound: javassist.NotFoundException) {
+           throw ClassNotFoundException(notFound.message)
         }
     }
 
