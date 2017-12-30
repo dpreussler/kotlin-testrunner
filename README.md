@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/dpreussler/kotlin-testrunner.svg?branch=master)](https://travis-ci.org/dpreussler/kotlin-testrunner)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-runner-junit4/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-runner-junit4)
+[![Build Status](https://travis-ci.org/dpreussler/kotlin-testrunner.svg?branch=master)](https://travis-ci.org/dpreussler/kotlin-testrunner) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-runner-junit4/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.jodamob.kotlin/kotlin-runner-junit4) [![codecov](https://codecov.io/gh/dpreussler/kotlin-testrunner/branch/master/graph/badge.svg)](https://codecov.io/gh/dpreussler/kotlin-testrunner)
 
 # kotlin-testrunner
 
