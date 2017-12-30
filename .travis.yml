@@ -4,8 +4,7 @@ install:
     - true
 
 script:
- - TERM=dumb ./gradlew test
- - ./gradlew codeCoverageReport
+    - TERM=dumb ./gradlew test codeCoverageReport
 
- after_success:
-   - bash <(curl -s https://codecov.io/bash)
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
