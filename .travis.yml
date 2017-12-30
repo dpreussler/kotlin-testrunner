@@ -3,4 +3,9 @@ language: java
 install:
     - true
 
-script: TERM=dumb ./gradlew test
+script:
+ - TERM=dumb ./gradlew test
+ - ./gradlew codeCoverageReport
+
+ after_success:
+   - bash <(curl -s https://codecov.io/bash)
