@@ -35,13 +35,15 @@ internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootCla
             val defaultClass = pool.get(className)
             return loadedClasses.getOrPut(className, {
                 if (isIncluded(className) && !isStaticOrNotPublic(className, defaultClass)) {
+                    System.err.println("removing" + className)
                     removeFinal(defaultClass) as Class<T>
                 } else {
+                    System.err.println("loading" + className)
                     defaultClass.toClass(this)
                 }
             }) as Class<T>
         } catch (notFound: javassist.NotFoundException) {
-            throw ClassNotFoundException(notFound.message)
+            throw ClassNotFoundException(notFound.message, notFound)
         }
     }
 
@@ -52,24 +54,30 @@ internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootCla
     }
 
     fun removeFinal(clazz: CtClass): Class<*>? {
-        removeFinalOnClass(clazz)
-        removeFinalOnMethods(clazz)
-        clazz.stopPruning(true)
-        return clazz.toClass(this)
+        return clazz.apply {
+            removeFinalOnClass()
+            removeFinalOnMethods()
+            stopPruning()
+        }.toClass(this)
     }
 
-    private fun removeFinalOnMethods(clazz: CtClass) {
-        clazz.declaredMethods.forEach {
+    private fun CtClass.stopPruning() = stopPruning(true)
+
+    private fun CtClass.removeFinalOnMethods() {
+        declaredMethods.forEach {
             if (ReflectModifier.isPublic(it.modifiers) && ReflectModifier.isFinal(it.modifiers)) {
                 it.modifiers = Modifier.clear(it.modifiers, java.lang.reflect.Modifier.FINAL)
             }
         }
+        nestedClasses.forEach { it.removeFinalOnMethods() }
     }
 
-    private fun removeFinalOnClass(clazz: CtClass) {
-        val modifiers = clazz.modifiers
+    private fun CtClass.removeFinalOnClass() {
         if (ReflectModifier.isFinal(modifiers)) {
-            clazz.modifiers = Modifier.clear(modifiers, java.lang.reflect.Modifier.FINAL)
+            modifiers = Modifier.clear(modifiers, java.lang.reflect.Modifier.FINAL)
+        }
+        nestedClasses.forEach {
+            it.removeFinalOnClass()
         }
     }
 
@@ -77,12 +85,14 @@ internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootCla
         includes.forEach {
             if (this.startsWith(it, true)) return true
         }
-
         return false
     }
 
     private fun isIncluded(className: String)
-            = className.isInProcessedPackage(classFilter.packages) || classFilter.classes.any { it.qualifiedName == className }
+            = className.isInProcessedPackage(classFilter.packages) ||
+              classFilter.classes.any {
+                  className == it.qualifiedName
+              }
 
     private fun isRootClass(className: String) = className == rootClass.canonicalName
 }
