@@ -20,6 +20,13 @@ class TestWithRunnerOnClasses {
         classToBeTested.callMe()
     }
 
+    @Test(expected = IllegalAccessError::class)
+    fun should_fail_for_super_class_methods_without_mock() {
+        val finalClassSample = FinalClassSample()
+        val classToBeTested = ClassToBeTested(finalClassSample)
+        classToBeTested.callMeSuper()
+    }
+
     @Test
     fun should_work() {
         val finalClassSample = org.mockito.Mockito.mock(FinalClassSample::class.java)
@@ -32,6 +39,13 @@ class TestWithRunnerOnClasses {
         val finalClassSample = org.mockito.Mockito.mock(FinalClassTwoSample::class.java)
         val classToBeTested = ClassToBeTested(finalClassSample)
         classToBeTested.callMe()
+    }
+
+    @Test
+    fun should_work_for_super_class_methods() {
+        val finalClassSample = org.mockito.Mockito.mock(FinalClassSample::class.java)
+        val classToBeTested = ClassToBeTested(finalClassSample)
+        classToBeTested.callMeSuper()
     }
 
     @Test(expected = org.mockito.exceptions.base.MockitoException::class)
