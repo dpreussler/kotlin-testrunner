@@ -22,6 +22,17 @@ class TestWithRunnerOnClasses extends Specification {
         }
     }
 
+    def "should fail for super method without mock"() {
+        expect:
+        try {
+            def finalClassSample = Mock FinalClassSample
+            def classToBeTested = new ClassToBeTested(finalClassSample)
+            classToBeTested.callMeSuper()
+        } catch (Throwable error) {
+            assert error instanceof IllegalAccessError
+        }
+    }
+
     def "should mock correctly"() {
         given:
         def finalClassSample = Mock FinalClassSample
@@ -29,6 +40,18 @@ class TestWithRunnerOnClasses extends Specification {
 
         when:
         classToBeTested.callMe()
+
+        then:
+        notThrown IllegalAccessError
+    }
+
+    def "should mock parent method correctly"() {
+        given:
+        def finalClassSample = Mock FinalClassSample
+        def classToBeTested = new ClassToBeTested(finalClassSample)
+
+        when:
+        classToBeTested.callMeSuper()
 
         then:
         notThrown IllegalAccessError

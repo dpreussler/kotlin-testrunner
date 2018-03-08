@@ -64,6 +64,9 @@ internal class NoMoreFinalsClassLoader(val classFilter: ClassFilter, val rootCla
                 it.modifiers = Modifier.clear(it.modifiers, java.lang.reflect.Modifier.FINAL)
             }
         }
+        if (clazz.superclass != null) {
+            removeFinalOnMethods(clazz.superclass)
+        }
     }
 
     private fun removeFinalOnClass(clazz: CtClass) {
